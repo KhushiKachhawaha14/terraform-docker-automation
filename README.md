@@ -16,6 +16,7 @@ The `main.tf` file defines two primary resources using the **Docker Provider**:
 ---
 ## 🏃 Getting Started (Execution Guide)
 Follow these steps in your terminal from the directory containing `main.tf` to provision the infrastructure.
+
 Step 1: Initialize the Working Directory
 This command downloads the **Docker Provider** and sets up the necessary local files.
 ```bash
