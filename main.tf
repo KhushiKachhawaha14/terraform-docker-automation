@@ -2,40 +2,31 @@
 terraform {
   required_providers {
     docker = {
-      source = "kreuzwerker/docker"
-      version = "~> 2.15" # Specify a compatible version
+      source  = "kreuzwerker/docker"
+      version = "~> 3.0.1" 
     }
   }
 }
 
-# Provider configuration
-# Terraform will automatically connect to your local Docker daemon
 provider "docker" {}
 
-# --- Define the Infrastructure: Docker Image and Container ---
-
-# 1. Pull the specified Docker image (e.g., Nginx)
+# 1. Pull the Nginx image
 resource "docker_image" "nginx_image" {
   name         = "nginx:latest"
-  keep_locally = true # Keep the image even after 'terraform destroy'
+  keep_locally = false # Changed to false so your machine stays clean after destroy
 }
 
-# 2. Create and run a Docker container from the pulled image
+# 2. Create and run the Nginx container
 resource "docker_container" "web_container" {
-  name    = "terraform-nginx-web-server"
-  image   = docker_image.nginx_image.name
+  name  = "terraform-nginx-web-server"
+  image = docker_image.nginx_image.image_id # Better practice to use image_id
   
-  # Configure port mapping: host_port:container_port
   ports {
     internal = 80
-    external = 8082 # Access the container via http://localhost:8080
+    external = 8082 # Accessible via http://localhost:8082
   }
 
-  # Set the container to restart automatically
   restart = "always"
-  
-  # Ensure the container waits for the image to be ready
-  depends_on = [docker_image.nginx_image] 
 }
 
 # --- Output the accessible URL ---
